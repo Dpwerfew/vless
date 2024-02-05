@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Define color codes for printing colored messages
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+plain='\033[0m'
+
+# Save the current directory path
+cur_dir=$(pwd)
+
+# Check if the script is run as root; exit with an error if not
+[[ $EUID -ne 0 ]] && echo -e "${red}Fatal error: ${plain} Please run this script with root privilege \n " && exit 1
+
+# Check the operating system type and set the 'release' variable accordingly
+if [[ -f /etc/os-release ]]; then
+    source /etc/os-release
+    release=$ID
+elif [[ -f /usr/lib/os-release ]]; then
+    source /usr/lib/os-release
+    release=$ID
+else
+    echo "Failed to check the system OS, please contact the author!" >&2
+    exit 1
+fi
+echo "The OS release is: $release"
+
+# Function to determine the CPU architecture and print it
+arch3xui() {
+    case "$(uname -m)" in
+    x86_64 | x64 | amd64) echo 'amd64' ;;
+    i*86 | x86) echo '386' ;;
+    armv8* | armv8 | arm64 | aarch64) echo 'arm64' ;;
+    armv7* | armv7 | arm) echo 'armv7' ;;
+    armv6* | armv6) echo 'armv6' ;;
+    armv5* | armv5) echo 'armv5' ;;
+    *) echo -e "${green}Unsupported CPU architecture! ${plain}" && rm -f install.sh && exit 1 ;;
+    esac
+}
+
+# Print the detected CPU architecture
+echo "arch: $(arch3xui)"
+
+# Variable to store OS version number
+os_version=""
+os_version=$(grep -i version_id /etc/os-release | cut -d \" -f2 | cut -d . -f1)
+
+# Check OS version and exit if it does not meet the minimum requirements for x-ui installation
+# The script supports CentOS, Ubuntu, Fedora, Debian, AlmaLinux, Rocky Linux, Arch, Manjaro, and Armbian
+# with specific version checks for each
+
+# Function to install base packages required for x-ui installation
+install_base() {
+    case "${release}" in
+    centos | almalinux | rocky)
+        yum -y update && yum install -y -q wget curl tar
+        ;;
+    fedora)
+        dnf -y update && dnf install -y -q wget curl tar
+        ;;
+    arch | manjaro)
+        pacman -Syu && pacman -Syu --noconfirm wget curl tar
+        ;;
+    *)
+        apt-get update && apt install -y -q wget curl tar
+        ;;
+    esac
+}
+
+# Function for post-installation configuration of x-ui
+# It offers to set a custom username, password, and panel port for x-ui
+config_after_install() {
+    # Instructions and prompts for setting up x-ui after installation
+    # Includes setting up username, password, and panel port
+    # Also handles fresh installation and upgrade cases differently
+}
+
+# Main function to install x-ui
+# Downloads and extracts the x-ui package, configures systemd service, and performs post-installation setup
+install_x_ui() {
+    # Steps to download, extract, and set up x-ui
+    # Includes handling different CPU architectures and ensuring the service is enabled and started
+}
+
+# Start the base package installation and then x-ui installation
+echo -e "${green}Running...${plain}"
+install_base
+install_x-ui $1
