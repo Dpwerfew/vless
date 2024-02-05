@@ -221,3 +221,34 @@ install_x-ui() {
     # Копирование файла службы systemd для x-ui
     cp -f x-ui.service /etc/systemd/system/
     # Скачивание и установ
+cp -f x-ui.service /etc/systemd/system/
+    wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/MHSanaei/3x-ui/main/x-ui.sh
+    chmod +x /usr/local/x-ui/x-ui.sh
+    chmod +x /usr/bin/x-ui
+    config_after_install
+
+    systemctl daemon-reload
+    systemctl enable x-ui
+    systemctl start x-ui
+    echo -e "${green}x-ui ${last_version}${plain} installation finished, it is running now..."
+    echo -e ""
+    echo -e "x-ui control menu usages: "
+    echo -e "----------------------------------------------"
+    echo -e "x-ui              - Enter     Admin menu"
+    echo -e "x-ui start        - Start     x-ui"
+    echo -e "x-ui stop         - Stop      x-ui"
+    echo -e "x-ui restart      - Restart   x-ui"
+    echo -e "x-ui status       - Show      x-ui status"
+    echo -e "x-ui enable       - Enable    x-ui on system startup"
+    echo -e "x-ui disable      - Disable   x-ui on system startup"
+    echo -e "x-ui log          - Check     x-ui logs"
+    echo -e "x-ui banlog       - Check Fail2ban ban logs"
+    echo -e "x-ui update       - Update    x-ui"
+    echo -e "x-ui install      - Install   x-ui"
+    echo -e "x-ui uninstall    - Uninstall x-ui"
+    echo -e "----------------------------------------------"
+}
+
+echo -e "${green}Running...${plain}"
+install_base
+install_x-ui $1
