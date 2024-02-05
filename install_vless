@@ -220,16 +220,22 @@ install_x-ui() {
     chmod +x x-ui bin/xray-linux-$(arch3xui)
     # Копирование файла службы systemd для x-ui
     cp -f x-ui.service /etc/systemd/system/
-    # Скачивание и установ
-     cp -f x-ui.service /etc/systemd/system/
+    # Дополнение предыдущего примера кода
+
+    # Скачивание скрипта для управления x-ui и его установка
     wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/MHSanaei/3x-ui/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
+
+    # Вызов функции конфигурации после установки
     config_after_install
 
+    # Перезагрузка демона systemd, включение и запуск службы x-ui
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
+
+    # Вывод сообщения о завершении установки и инструкции по использованию
     echo -e "${green}x-ui ${last_version}${plain} installation finished, it is running now..."
     echo -e ""
     echo -e "x-ui control menu usages: "
@@ -247,8 +253,11 @@ install_x-ui() {
     echo -e "x-ui install      - Install   x-ui"
     echo -e "x-ui uninstall    - Uninstall x-ui"
     echo -e "----------------------------------------------"
-}
+} # Закрывающая скобка функции install_x-ui
 
+# Запуск основной логики скрипта
 echo -e "${green}Running...${plain}"
 install_base
 install_x-ui $1
+
+    
