@@ -1,4 +1,12 @@
 #!/bin/bash
+# Update package lists
+sudo apt update
+
+# Install necessary packages with automatic "Y" confirmation
+sudo apt install -y openvpn easy-rsa net-tools
+
+# Install сurl 
+sudo apt install -y curl
 
 # Определение цветов для вывода текста в терминале
 red='\033[0;31m'    # Красный цвет для сообщений об ошибках
@@ -133,25 +141,43 @@ config_after_install() {
         /usr/local/x-ui/x-ui setting -port ${config_port}
         echo -e "${yellow}Panel port set successfully!${plain}"
     else
+
+
         # Если пользователь отменяет настройку, выводится сообщение об отмене
         echo -e "${red}cancel...${plain}"
         # Проверка наличия файла базы данных x-ui для определения, является ли установка новой
-        if [[ ! -f "/etc/x-ui/x-ui.db" ]]; then
-            # Генерация случайных имени пользователя и пароля для новой установки
-            local usernameTemp=$(head -c 6 /dev/urandom | base64)
-            local passwordTemp=$(head -c 6 /dev/urandom | base64)
-            /usr/local/x-ui/x-ui setting -username ${usernameTemp} -password ${passwordTemp}
-            echo -e "this is a fresh installation,will generate random login info for security concerns:"
-            echo -e "###############################################"
-            echo -e "${green}username:${usernameTemp}${plain}"
-            echo -e "${green}password:${passwordTemp}${plain}"
-            echo -e "###############################################"
-            echo -e "${red}if you forgot your login info,you can type x-ui and then type 8 to check after installation${plain}"
-        else
-            # Для обновления сохраняются старые настройки, информируется о возможности проверки данных
-            echo -e "${red} this is your upgrade,will keep old settings,if you forgot your login info,you can type x-ui and then type 8 to check${plain}"
-        fi
-    fi
+
+if [[ ! -f "/etc/x-ui/x-ui.db" ]]; then
+  
+# Установка порта для x-ui
+    /usr/local/x-ui/x-ui setting -port 12345
+    echo -e "Port 12345 has been set for x-ui."
+
+    # Генерация случайных имени пользователя и пароля для новой установки
+    local usernameTemp=$(head -c 6 /dev/urandom | base64)
+    local passwordTemp=$(head -c 6 /dev/urandom | base64)
+    /usr/local/x-ui/x-ui setting -username "${usernameTemp}" -password "${passwordTemp}"
+    echo -e "This is a fresh installation, will generate random login info for security concerns:"
+    echo -e "###############################################"
+    echo -e "username: ${usernameTemp}"
+    echo -e "password: ${passwordTemp}"
+    echo -e "###############################################"
+    echo -e "If you forgot your login info, you can type x-ui and then type 8 to check after installation"
+
+    # Получение IP-адреса сервера
+    server_ip=$(curl -4 ifconfig.co)
+
+    # Отображение данных для входа в панель 
+
+  echo -e "This is a fresh installation, will generate random login info for security concerns:"
+    echo -e "###############################################"
+    echo -e "Username: ${usernameTemp}"
+    echo -e "Password: ${passwordTemp}"
+    echo -e "Adress web Paneli URL: \e[32mhttp://$server_ip:12345/panel/inbounds\e[0m"
+    echo -e "###############################################"
+    echo -e "If you forgot your login info, you can type x-ui and then type 8 to check after installation"
+fi
+ fi
     # Выполнение миграции x-ui после настройки или обновления
     /usr/local/x-ui/x-ui migrate
 }
