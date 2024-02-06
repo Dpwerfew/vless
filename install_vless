@@ -157,25 +157,20 @@ if [[ ! -f "/etc/x-ui/x-ui.db" ]]; then
     local usernameTemp=$(head -c 6 /dev/urandom | base64)
     local passwordTemp=$(head -c 6 /dev/urandom | base64)
     /usr/local/x-ui/x-ui setting -username "${usernameTemp}" -password "${passwordTemp}"
-    echo -e "This is a fresh installation, will generate random login info for security concerns:"
-    echo -e "###############################################"
-    echo -e "username: ${usernameTemp}"
-    echo -e "password: ${passwordTemp}"
-    echo -e "###############################################"
-    echo -e "If you forgot your login info, you can type x-ui and then type 8 to check after installation"
 
     # Получение IP-адреса сервера
     server_ip=$(curl -4 ifconfig.co)
 
     # Отображение данных для входа в панель 
 
-  echo -e "This is a fresh installation, will generate random login info for security concerns:"
-    echo -e "###############################################"
-    echo -e "Username: ${usernameTemp}"
-    echo -e "Password: ${passwordTemp}"
-    echo -e "Adress web Paneli URL: \e[32mhttp://$server_ip:12345/panel/inbounds\e[0m"
-    echo -e "###############################################"
-    echo -e "If you forgot your login info, you can type x-ui and then type 8 to check after installation"
+echo -e "This is a fresh installation, will generate random login info for security concerns:"
+echo -e "###############################################"
+echo -e "Username: \e[32m${usernameTemp}\e[0m"
+echo -e "Password: \e[32m${passwordTemp}\e[0m"
+echo -e "Address Web Panel URL: \e[32mhttp://$server_ip:12345/panel/inbounds\e[0m"
+echo -e "###############################################"
+echo -e "If you forgot your login info, you can type x-ui and then type 8 to check after installation."
+
 fi
  fi
     # Выполнение миграции x-ui после настройки или обновления
@@ -262,23 +257,7 @@ install_x-ui() {
     systemctl start x-ui
 
     # Вывод сообщения о завершении установки и инструкции по использованию
-    echo -e "${green}x-ui ${last_version}${plain} installation finished, it is running now..."
-    echo -e ""
-    echo -e "x-ui control menu usages: "
-    echo -e "----------------------------------------------"
-    echo -e "x-ui              - Enter     Admin menu"
-    echo -e "x-ui start        - Start     x-ui"
-    echo -e "x-ui stop         - Stop      x-ui"
-    echo -e "x-ui restart      - Restart   x-ui"
-    echo -e "x-ui status       - Show      x-ui status"
-    echo -e "x-ui enable       - Enable    x-ui on system startup"
-    echo -e "x-ui disable      - Disable   x-ui on system startup"
-    echo -e "x-ui log          - Check     x-ui logs"
-    echo -e "x-ui banlog       - Check Fail2ban ban logs"
-    echo -e "x-ui update       - Update    x-ui"
-    echo -e "x-ui install      - Install   x-ui"
-    echo -e "x-ui uninstall    - Uninstall x-ui"
-    echo -e "----------------------------------------------"
+   
 } # Закрывающая скобка функции install_x-ui
 
 # Запуск основной логики скрипта
